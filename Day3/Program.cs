@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-
-Console.WriteLine("Input your file path:");
+﻿Console.WriteLine("Input your file path:");
 string path = Console.ReadLine();
 string data = File.ReadAllText(path);
 
@@ -186,10 +183,7 @@ List<Gear> combinedGears=CombineAndMergeGears(gears);
 
 foreach (Gear gear in combinedGears) 
 { 
-    if (gear.IsGear)
-    {
-        sum2 += gear.Ratio;
-    }
+    sum2 += gear.Ratio;
 }
 
 Console.WriteLine(sum1);
@@ -212,8 +206,6 @@ List<Gear> CombineAndMergeGears(List<Gear> gearList)
                 combinedGear.Ratio = combinedGear.Num1 * combinedGear.Num2;
             }
 
-            combinedGear.IsGear = true;
-
             combinedGears.Add(combinedGear);
 
             gearList.RemoveAll(g => group.Contains(g));
@@ -229,21 +221,11 @@ class Gear
     public int Ratio=0;
     public int X = 0;
     public int Y = 0;
-    public bool IsGear=false;
 
     public Gear(int x, int y, int num)
     {
         X = x;
         Y = y;
-        if (Num1 == 0)
-        {
-            Num1 = num;
-        }
-        else if(Num1!=0 && Num2==0) 
-        { 
-            Num2 = num;
-            IsGear=true;
-        }
-        Ratio = Num1*Num2;
+        Num1 = num;
     }
 }
