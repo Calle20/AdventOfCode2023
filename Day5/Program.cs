@@ -39,21 +39,23 @@ for (int i = 0; i < lines.Count; i++)
     }
 }
 
-long currentNum;
 foreach (long seed in seeds)
 {
-    currentNum = seed;
+    long currentNum = seed;
     for(int i = 0; i <= 6; i++)
     {
         List<Range> map = convertionMaps[i];
+        long newNum = currentNum;
         foreach(Range range in map)
         {
-            if (range.SourceRangeStart < currentNum && currentNum < range.SourceRangeStart + range.RangeLength)
+            if ((range.SourceRangeStart < currentNum || range.SourceRangeStart==currentNum) && currentNum < range.SourceRangeStart + range.RangeLength)
             {
-                currentNum=currentNum-range.SourceRangeStart+range.DestinationRangeStart;
+                newNum=currentNum-range.SourceRangeStart+range.DestinationRangeStart;
             }
         }
+        currentNum=newNum;
     }
+    Console.WriteLine(seed+" "+currentNum);
     if (sum1 == 0)
     {
         sum1 = currentNum;
