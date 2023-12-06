@@ -1,10 +1,11 @@
-﻿using System.Text.Unicode;
+﻿using System.Linq;
+using System.Data;
 
 Console.WriteLine("Input your file path:");
 List<string> lines = File.ReadAllText(Console.ReadLine()).Trim().Split('\n').ToList();
 
 long sum1 = 0;
-int sum2 = 0;
+long sum2 = 0;
 
 List<long> seeds = new List<long>();
 
@@ -55,7 +56,6 @@ foreach (long seed in seeds)
         }
         currentNum=newNum;
     }
-    Console.WriteLine(seed+" "+currentNum);
     if (sum1 == 0)
     {
         sum1 = currentNum;
@@ -65,6 +65,50 @@ foreach (long seed in seeds)
         sum1 = currentNum;
     }
 }
+
+
+
+Thread thread = new Thread(() =>
+{
+    for (int i = 0; i < seeds.Count; i++)
+    {
+        long begin = seeds[i];
+        long end = begin + seeds[i + 1];
+        i++;
+        seeds.RemoveAt(i);
+        seeds.RemoveAt(i + 1);
+        long
+        for (long j = begin; j < end; j+=stepSize)
+        {
+            long currentNum = j;
+            for (int k = 0; k <= 6; k++)
+            {
+                List<Range> map = convertionMaps[k];
+                long newNum = currentNum;
+                foreach (Range range in map)
+                {
+                    if ((range.SourceRangeStart < currentNum || range.SourceRangeStart == currentNum) && currentNum < range.SourceRangeStart + range.RangeLength)
+                    {
+                        newNum = currentNum - range.SourceRangeStart + range.DestinationRangeStart;
+                    }
+                }
+                currentNum = newNum;
+            }
+            if (sum2 == 0)
+            {
+                sum2 = currentNum;
+            }
+            else if (sum2 > currentNum)
+            {
+                sum2 = currentNum;
+            }
+            Console.WriteLine(currentNum);
+        }
+    }
+});
+thread.Start();
+thread.Join();
+
 
 Console.WriteLine(sum1);
 Console.WriteLine(sum2);
