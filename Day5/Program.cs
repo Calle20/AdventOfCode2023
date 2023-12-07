@@ -65,35 +65,30 @@ foreach (long seed in seeds)
         sum1 = currentNum;
     }
 }
-
-
+foreach (long seed in seeds)
+{
+    long currentNum = calcLocation(seed);
+    if (sum1 == 0)
+    {
+        sum1 = currentNum;
+    }
+    else if (sum1 > currentNum)
+    {
+        sum1 = currentNum;
+    }
+}
 
 Thread thread = new Thread(() =>
 {
-    for (int i = 0; i < seeds.Count; i++)
+    for(int i=4;i<seeds.Count; i++)
     {
         long begin = seeds[i];
         long end = begin + seeds[i + 1];
         i++;
-        seeds.RemoveAt(i);
-        seeds.RemoveAt(i + 1);
-        long
-        for (long j = begin; j < end; j+=stepSize)
+        long currentNum = 0;
+        Parallel.For(begin, end, j =>
         {
-            long currentNum = j;
-            for (int k = 0; k <= 6; k++)
-            {
-                List<Range> map = convertionMaps[k];
-                long newNum = currentNum;
-                foreach (Range range in map)
-                {
-                    if ((range.SourceRangeStart < currentNum || range.SourceRangeStart == currentNum) && currentNum < range.SourceRangeStart + range.RangeLength)
-                    {
-                        newNum = currentNum - range.SourceRangeStart + range.DestinationRangeStart;
-                    }
-                }
-                currentNum = newNum;
-            }
+            currentNum = calcLocation(j);
             if (sum2 == 0)
             {
                 sum2 = currentNum;
@@ -102,8 +97,9 @@ Thread thread = new Thread(() =>
             {
                 sum2 = currentNum;
             }
-            Console.WriteLine(currentNum);
-        }
+            Console.WriteLine(sum2);
+            Console.WriteLine(i);
+        });
     }
 });
 thread.Start();
@@ -112,6 +108,26 @@ thread.Join();
 
 Console.WriteLine(sum1);
 Console.WriteLine(sum2);
+
+
+long calcLocation(long seed)
+{
+    long currentNum = seed;
+    for (int k = 0; k <= 6; k++)
+    {
+        List<Range> map = convertionMaps[k];
+        long newNum = currentNum;
+        foreach (Range range in map)
+        {
+            if ((range.SourceRangeStart < currentNum || range.SourceRangeStart == currentNum) && currentNum < range.SourceRangeStart + range.RangeLength)
+            {
+                newNum = currentNum - range.SourceRangeStart + range.DestinationRangeStart;
+            }
+        }
+        currentNum = newNum;
+    }
+    return currentNum;
+}
 
 class Range
 {
