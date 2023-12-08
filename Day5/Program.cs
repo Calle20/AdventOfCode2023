@@ -78,11 +78,18 @@ foreach (long seed in seeds)
     }
 }
 
-Thread thread = new Thread(){
-    long maxNum=Int64.MaxValue();
+Thread thread = new Thread(()=>{
+    long maxNum = long.MaxValue;
     for(long i=0;i<maxNum;i++)
     {
-        long currentNum=calcLocationReverse(i);
+        Console.WriteLine(i);
+        long seed=calcLocationReverse(i);
+        Console.WriteLine(seed);
+        if (IsNumberInRanges(seed, seeds.ToArray()))
+        {
+            sum2 = calcLocation(seed);
+            break;
+        }
     }
 });
 thread.Start();
@@ -92,6 +99,20 @@ thread.Join();
 Console.WriteLine(sum1);
 Console.WriteLine(sum2);
 
+static bool IsNumberInRanges(long number, long[] ranges)
+{
+    for (int i = 0; i < ranges.Length; i += 2)
+    {
+        long start = ranges[i];
+        long length = ranges[i + 1];
+
+        if (number >= start && number < start + length)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 long calcLocation(long seed)
 {
@@ -105,6 +126,25 @@ long calcLocation(long seed)
             if ((range.SourceRangeStart < currentNum || range.SourceRangeStart == currentNum) && currentNum < range.SourceRangeStart + range.RangeLength)
             {
                 newNum = currentNum - range.SourceRangeStart + range.DestinationRangeStart;
+            }
+        }
+        currentNum = newNum;
+    }
+    return currentNum;
+}
+
+long calcLocationReverse(long location)
+{
+    long currentNum = location;
+    for (int k = 6; k >= 0; k--)
+    {
+        List<Range> map = convertionMaps[k];
+        long newNum = currentNum;
+        foreach (Range range in map)
+        {
+            if ((range.DestinationRangeStart < currentNum || range.DestinationRangeStart == currentNum) && currentNum < range.DestinationRangeStart + range.RangeLength)
+            {
+                newNum = currentNum - range.DestinationRangeStart + range.SourceRangeStart;
             }
         }
         currentNum = newNum;
