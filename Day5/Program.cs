@@ -78,28 +78,11 @@ foreach (long seed in seeds)
     }
 }
 
-Thread thread = new Thread(() =>
-{
-    for(int i=4;i<seeds.Count; i++)
+Thread thread = new Thread(){
+    long maxNum=Int64.MaxValue();
+    for(long i=0;i<maxNum;i++)
     {
-        long begin = seeds[i];
-        long end = begin + seeds[i + 1];
-        i++;
-        long currentNum = 0;
-        Parallel.For(begin, end, j =>
-        {
-            currentNum = calcLocation(j);
-            if (sum2 == 0)
-            {
-                sum2 = currentNum;
-            }
-            else if (sum2 > currentNum)
-            {
-                sum2 = currentNum;
-            }
-            Console.WriteLine(sum2);
-            Console.WriteLine(i);
-        });
+        long currentNum=calcLocationReverse(i);
     }
 });
 thread.Start();
