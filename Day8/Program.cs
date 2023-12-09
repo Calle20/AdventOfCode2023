@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-Console.WriteLine("Input your file path:");
+﻿Console.WriteLine("Input your file path:");
 List<string> lines = File.ReadAllText(Console.ReadLine()).Trim().Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
 
 int sum2 = 0;
@@ -14,17 +11,14 @@ foreach (string line in lines.Skip(1))
 {
     nodes.Add(line.Split(" =", StringSplitOptions.RemoveEmptyEntries)[0], line.Replace("(", "").Replace(")", "").Split("= ", StringSplitOptions.RemoveEmptyEntries)[1].Split(", ", StringSplitOptions.RemoveEmptyEntries).ToList());
 }
-
 //Part 1
 int steps=getPathLength(navigation, nodes, "AAA", "ZZZ");
 Console.WriteLine(steps);
 
 //Part 2
-
 List<string> currentKeys = nodes.Keys.Where(e => e.EndsWith("A")).ToList();
 List<long> paths = currentKeys.Select(k => getPathLength(navigation, nodes, k, "Z")).Select(v=>(long) v).ToList();
 long p2=paths.Skip(1).Aggregate(paths[0], LCM);
-
 Console.WriteLine(p2);
 
 int getPathLength(List<char> navigation, Dictionary<string,List<string>> nodes, string start, string ending)
@@ -50,7 +44,6 @@ int getPathLength(List<char> navigation, Dictionary<string,List<string>> nodes, 
     return steps;
 }
 
-//Prewritten methods
 long GCD(long a, long b)
 {
     long remainder;
